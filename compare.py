@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 
+#AI generated
 
 def clean_mod_name(filename):
     """Strips version numbers, file extensions, and common prefixes to normalize mod names.
@@ -98,8 +99,8 @@ def compare_modpacks(pack1_path, pack2_path):
 
 if __name__ == "__main__":
     # Point these to the root directories of both modpacks (or their /mods subfolders)
-    modpack_a = r"C:\Users\ryana\curseforge\minecraft\Instances\2 week minecraft phase\mods"
-    modpack_b = r"C:\Users\ryana\curseforge\minecraft\Instances\2 week minecraft phase (1)\mods"
+    modpack_a = input('Input path a ')
+    modpack_b = input('Input path b')
 
     while True:
         compare_modpacks(modpack_a, modpack_b)

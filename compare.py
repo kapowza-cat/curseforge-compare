@@ -100,7 +100,7 @@ def compare_modpacks(pack1_path, pack2_path):
 if __name__ == "__main__":
     # Point these to the root directories of both modpacks (or their /mods subfolders)
     modpack_a = input('Input path a ')
-    modpack_b = input('Input path b')
+    modpack_b = input('Input path b ')
 
     while True:
         compare_modpacks(modpack_a, modpack_b)

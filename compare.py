@@ -82,26 +82,75 @@ def compare_modpacks(pack1_path, pack2_path):
     in_both = sorted(list(mods1 & mods2))
 
     print(f"=== Modpack Comparison Summary ===")
-    print(f"Total mods in 1: {len(mods1)}")
-    print(f"Total mods in 2: {len(mods2)}")
-    print(f"Shared mods in both: {len(in_both)}\n")
+    print(f"Total mods in {pack1_name}: {len(mods1)}")
+    print(f"Total mods in {pack2_name}: {len(mods2)}")
+    print(f"Shared mods in {pack1_name} and {pack2_name}: {len(in_both)}\n")
 
-    print(f"--- Mods ONLY in 1 ({len(only_in_pack1)}) ---")
+    print(f"--- Mods ONLY in {pack1_name} ({len(only_in_pack1)}) ---")
     for mod in only_in_pack1:
         print(f"  - {mod}")
 
-    print(f"\n--- Mods ONLY in 2 ({len(only_in_pack2)}) ---")
+    print(f"\n--- Mods ONLY in {pack2_name} ({len(only_in_pack2)}) ---")
     for mod in only_in_pack2:
         print(f"  - {mod}")
 
     return only_in_pack1, only_in_pack2
 
 
+def get_modpack_directories():
+    """Return CurseForge Minecraft instance directories in name order."""
+    instances_dir = (
+        Path.home() / "curseforge" / "minecraft" / "Instances"
+    )
+
+    if not instances_dir.is_dir():
+        print(f"Error: CurseForge instances directory not found: {instances_dir}")
+        return []
+
+    return sorted(
+        (directory for directory in instances_dir.iterdir() if directory.is_dir()),
+        key=lambda directory: directory.name.lower(),
+    )
+
+
+def select_modpacks():
+    """Prompt the user to select two installed modpacks to compare."""
+    modpacks = get_modpack_directories()
+
+    if len(modpacks) < 2:
+        print("Error: At least two modpack directories are required to compare.")
+        return None
+
+    print("Available modpacks:")
+    for index, modpack in enumerate(modpacks, start=1):
+        print(f"  {index}. {modpack.name}")
+
+    while True:
+        selection = input("Select two modpacks by number, separated by a comma: ")
+        try:
+            selected_indexes = [int(value.strip()) for value in selection.split(",")]
+        except ValueError:
+            print("Please enter two valid numbers separated by a comma.")
+            continue
+
+        if (
+            len(selected_indexes) == 2
+            and selected_indexes[0] != selected_indexes[1]
+            and all(1 <= index <= len(modpacks) for index in selected_indexes)
+        ):
+            return tuple(modpacks[index - 1] for index in selected_indexes)
+
+        print("Please select two different modpacks from the list.")
+
+
 if __name__ == "__main__":
-    # Point these to the root directories of both modpacks (or their /mods subfolders)
-    modpack_a = input('Input path a ')
-    modpack_b = input('Input path b ')
+    selected_modpacks = select_modpacks()
+
+    if selected_modpacks is None:
+        raise SystemExit(1)
+
+    modpack_a, modpack_b = selected_modpacks
 
     while True:
         compare_modpacks(modpack_a, modpack_b)
-        a = input('Again?')
+        input("Press Enter to compare again, or close the window to exit.")

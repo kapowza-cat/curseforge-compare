@@ -8,5 +8,7 @@ def set_close(value):
 if __name__ == '__main__':
     elevate.elevate(graphical=True)
     set_close(0)
-    a = input("Enter to deactivate standby")
+    print('Window may now be closed')
+    print('Now set to \'do nothing\'')
+    a = input('Accept this prompt to switch to \'sleep\'')
     set_close(1)
